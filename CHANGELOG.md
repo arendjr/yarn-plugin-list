@@ -10,6 +10,7 @@ adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 ## [1.0.0] - 2023-07-04
 
 - Initial release
+- Includes support for Yarn link resolutions (thanks to @lordrip!)
 
 [unreleased]: https://github.com/arendjr/yarn-plugin-list/compare/1.0.0...HEAD
 [1.0.0]: https://github.com/arendjr/yarn-plugin-list/releases/tag/1.0.0

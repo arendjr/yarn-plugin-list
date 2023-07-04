@@ -27,7 +27,8 @@ module.exports = {
         }
 
         const packageJsonContents = fs.readFileSync("package.json", "utf-8");
-        const { dependencies = {} } = JSON.parse(packageJsonContents);
+        const { dependencies = {}, resolutions = {} } =
+          JSON.parse(packageJsonContents);
 
         const lockContents = fs.readFileSync("yarn.lock", "utf-8");
         const resolved = parseSyml(lockContents);
@@ -37,7 +38,7 @@ module.exports = {
         function addDependency(packageName, versionRange) {
           const packageInfo = lookup(
             resolved,
-            getLockFileKey(packageName, versionRange),
+            getLockFileKey(packageName, versionRange, resolutions),
           );
           if (!packageInfo) {
             throw new Error(
@@ -88,17 +89,20 @@ module.exports = {
   },
 };
 
-function getLockFileKey(packageName, versionSpecifier) {
+function getLockFileKey(packageName, versionSpecifier, resolutions) {
+  // If the package name is in the resolutions field, use the version from there.
+  const resolvedVersionSpecifier = resolutions[packageName] ?? versionSpecifier;
+
   // If the version field contains a URL, don't attempt to use the NPM registry
-  return versionSpecifier.includes(":")
-    ? `${packageName}@${versionSpecifier}`
-    : `${packageName}@npm:${versionSpecifier}`;
+  return resolvedVersionSpecifier.includes(":")
+    ? `${packageName}@${resolvedVersionSpecifier}`
+    : `${packageName}@npm:${resolvedVersionSpecifier}`;
 }
 
 /**
  * @param resolved All the resolved dependencies as found in the lock file.
  * @param dependencyKey Key of the dependency to look up. Can be created using
- *                      `lockFileKey()`.
+ *                      `getLockFileKey()`.
  */
 function lookup(resolved, dependencyKey) {
   const packageInfo = resolved[dependencyKey];
@@ -108,7 +112,15 @@ function lookup(resolved, dependencyKey) {
 
   // Fall back to slower iteration-based lookup for combined keys.
   for (const [key, packageInfo] of Object.entries(resolved)) {
-    if (key.split(",").some((key) => key.trim() === dependencyKey)) {
+    // Resolving ranges: "@babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.12.13, @babel/runtime@npm:^7.12.5"
+    const versionRanges = key.split(",");
+    if (versionRanges.some((key) => key.trim() === dependencyKey)) {
+      return packageInfo;
+    }
+
+    // Resolving yarn link resolutions: "@kaoto/kaoto-ui@portal:/home/rmartinez/repos/kaoto-ui::locator=vscode-kaoto%40workspace%3A."
+    const yarnLinkResolution = key.split("::")[0];
+    if (yarnLinkResolution === dependencyKey) {
       return packageInfo;
     }
   }
