@@ -1,0 +1,18 @@
+name: Check styling and linter
+
+on:
+  push:
+    branches: ["**"]
+
+jobs:
+  test:
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: yarn --immutable
+
+      - name: Linting and formatting
+        run: yarn ci

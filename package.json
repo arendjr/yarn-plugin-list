@@ -1,0 +1,40 @@
+{
+  "name": "yarn-plugin-list",
+  "packageManager": "yarn@3.5.0",
+  "description": "A modern Yarn plugin to reimplement the `list` command from Yarn v1",
+  "keywords": [
+    "yarn",
+    "plugin",
+    "list",
+    "scripts",
+    "vs code",
+    "vsce",
+    "development"
+  ],
+  "files": ["src/yarn-plugin-list.js"],
+  "author": "Arend van Beelen jr. <arend@arendjr.nl>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arendjr/yarn-plugin-list.git"
+  },
+  "bugs": {
+    "url": "https://github.com/arendjr/yarn-plugin-list/issues"
+  },
+  "homepage": "https://github.com/arendjr/yarn-plugin-list",
+  "main": "src/yarn-plugin-list.js",
+  "engines": {
+    "yarn": ">=3"
+  },
+  "scripts": {
+    "ci": "rome ci .",
+    "format": "rome format .",
+    "lint": "rome check .",
+    "release": "release-it"
+  },
+  "devDependencies": {
+    "@release-it/keep-a-changelog": "^3.1.0",
+    "release-it": "^15.10.3",
+    "rome": "^12.1.3"
+  }
+}
