@@ -7,6 +7,10 @@ adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.0.1] - 2023-07-04
+
+- Fix `yarn plugin import` usage.
+
 ## [1.0.0] - 2023-07-04
 
 - Initial release

@@ -1,8 +1,7 @@
-const fs = require("fs");
-
 module.exports = {
   name: "plugin-list",
   factory: (require) => {
+    const fs = require("fs");
     const { BaseCommand } = require("@yarnpkg/cli");
     const { Command, Option } = require("clipanion");
     const { parseSyml } = require("@yarnpkg/parsers");
