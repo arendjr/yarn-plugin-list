@@ -11,7 +11,9 @@
     "vsce",
     "development"
   ],
-  "files": ["src/yarn-plugin-list.js"],
+  "files": [
+    "src/yarn-plugin-list.js"
+  ],
   "author": "Arend van Beelen jr. <arend@arendjr.nl>",
   "license": "MIT",
   "repository": {
@@ -36,5 +38,6 @@
     "@release-it/keep-a-changelog": "^3.1.0",
     "release-it": "^15.10.3",
     "rome": "^12.1.3"
-  }
+  },
+  "version": "1.0.0"
 }
