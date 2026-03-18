@@ -92,10 +92,20 @@ function getLockFileKey(packageName, versionSpecifier, resolutions) {
   // If the package name is in the resolutions field, use the version from there.
   const resolvedVersionSpecifier = resolutions[packageName] ?? versionSpecifier;
 
-  // If the version field contains a URL, don't attempt to use the NPM registry
-  return resolvedVersionSpecifier.includes(":")
-    ? `${packageName}@${resolvedVersionSpecifier}`
-    : `${packageName}@npm:${resolvedVersionSpecifier}`;
+  // Only plain registry semver/tag specifiers use the npm: protocol in the lockfile.
+  return usesNpmProtocol(resolvedVersionSpecifier)
+    ? `${packageName}@npm:${resolvedVersionSpecifier}`
+    : `${packageName}@${resolvedVersionSpecifier}`;
+}
+
+function usesNpmProtocol(versionSpecifier) {
+  // Protocol-based specifiers (workspace:, patch:, file:, etc.) and git/GitHub
+  // references are stored in the lockfile without an added npm: prefix.
+  return !(
+    versionSpecifier.includes(":") ||
+    versionSpecifier.startsWith("github:") ||
+    (versionSpecifier.includes("/") && versionSpecifier.includes("#"))
+  );
 }
 
 /**
